@@ -3,4 +3,5 @@
     <string name="last_name">Last name</string>
     <string name="first_name">First name</string>
     <string name="get_result">Узнать результат</string>
+    <string name="list_results">Список результатов</string>
 </resources>

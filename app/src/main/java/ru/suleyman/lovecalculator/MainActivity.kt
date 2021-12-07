@@ -1,13 +1,21 @@
 package ru.suleyman.lovecalculator
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import ru.suleyman.lovecalculator.database.LoveListDatabase
 import ru.suleyman.lovecalculator.databinding.ActivityMainBinding
+import ru.suleyman.lovecalculator.results.ListResultsActivity
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private val viewModel: LoveCalcViewModel by viewModels()
@@ -28,7 +36,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 when(state) {
                     is LoveCalcViewModel.LoveCalculatorState.Loading -> {
                         if (state.loading) {
-
                             binding.tvResult.text = "Loading..."
                         }
                     }
@@ -36,7 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         val model = state.response
                         model?.let {
                             binding.apply {
-                                binding.heartBar.startAnimation()
+                                heartBar.startAnimation()
                                 heartBar.progress = it.percentage
                                 tvResult.text = it.result
                             }
@@ -45,6 +52,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.listResults) {
+            val intent = Intent(this, ListResultsActivity::class.java)
+            startActivity(intent)
+            true
+        } else return super.onOptionsItemSelected(item)
     }
 
     override fun onClick(v: View?) {
