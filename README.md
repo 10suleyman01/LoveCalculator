@@ -1,5 +1,5 @@
 Simple Love Calculator
 
-![love-calculator](app/src/main/assets/app_screenshot.jpg)
+![love-calculator](app/src/main/assets/aps1.jpg)
 History
-![love-calculator](app/src/main/assets/app_screenshot_2.jpg)
+![love-calculator](app/src/main/assets/aps2.jpg)
