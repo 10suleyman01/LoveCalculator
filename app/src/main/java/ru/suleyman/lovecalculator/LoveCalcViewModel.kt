@@ -17,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoveCalcViewModel @Inject constructor(private val loveListDao: LoveListDao) : ViewModel() {
 
-    private var _state: MutableStateFlow<LoveCalculatorState> = MutableStateFlow(LoveCalculatorState.None)
+    private var _state: MutableStateFlow<LoveCalculatorState> =
+        MutableStateFlow(LoveCalculatorState.None)
     val state = _state.asStateFlow()
 
     @DelicateCoroutinesApi
@@ -25,9 +26,12 @@ class LoveCalcViewModel @Inject constructor(private val loveListDao: LoveListDao
 
         GlobalScope.launch(IO) {
             _state.value = LoveCalculatorState.Loading(true)
+            val isExistsResult = loveListDao.isExists(sname, fname)
             val response = LoveCalculatorApi.getPercentage(sname, fname)
             withContext(Main) {
-                response?.let { insert(it) }
+                if (!isExistsResult) {
+                    response?.let { insert(it) }
+                }
                 _state.value = LoveCalculatorState.Response(response)
                 _state.value = LoveCalculatorState.Loading(false)
             }
@@ -41,7 +45,7 @@ class LoveCalcViewModel @Inject constructor(private val loveListDao: LoveListDao
     sealed class LoveCalculatorState {
         object None : LoveCalculatorState()
         data class Loading(val loading: Boolean) : LoveCalculatorState()
-        data class Response(val response: LoveResultModel?): LoveCalculatorState()
+        data class Response(val response: LoveResultModel?) : LoveCalculatorState()
     }
 
 }
